@@ -1,0 +1,22 @@
+# Build outputs
+cpp/build/
+__pycache__/
+*.pyc
+*.pyo
+*.so
+*.dylib
+
+# Local results / data
+results/
+data/raw/
+data/*.bin
+data/*.spmat
+data/*.u8bin
+data/*.fvecs
+data/*.bvecs
+
+# OS / editor
+.DS_Store
+*.swp
+.vscode/
+.idea/
