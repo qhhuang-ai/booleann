@@ -1,8 +1,8 @@
 # Boole-ANN: The Correlation Frontier of Filtered ANN
 
 Reference implementation and reproducibility scripts for the **Boole-ANN** filtered
-approximate nearest-neighbour framework. This bundle contains **only the code
-required to reproduce our reported results**: the ARWGI theorem deployment, the
+approximate nearest-neighbour framework. This bundle contains the code
+required to reproduce our reported results: the ARWGI theorem deployment, the
 HAMCG hot-atom subgraph, the BCI deployed system (selectivity-tiered dispatcher
 + PACH cluster cache + per-tag bitvecs + pair-posting cache), the DKW
 calibration of $\varepsilon_{\mathrm{corr}}$ for hypothesis (H2), and the
