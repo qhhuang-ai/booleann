@@ -75,8 +75,7 @@ boole-ann-code/
 * Python 3.9+ with the packages in `requirements.txt`.
 * ~50 GB free disk for YFCC10M + SIFT100M, ~1.5 TB for SIFT1B.
 
-The C++ port uses **parlaylib** (a parallel runtime library, Apache 2.0) for
-work-stealing primitives. Install it via:
+The C++ port uses **parlaylib** (a parallel runtime library, Apache 2.0) . Install it via:
 
 ```bash
 git clone https://github.com/cmuparlay/parlaylib.git /tmp/parlaylib
