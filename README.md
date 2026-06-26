@@ -4,7 +4,7 @@ Reference implementation and reproducibility scripts for the **Boole-ANN** filte
 approximate nearest-neighbour framework. This bundle contains the code
 required to reproduce our reported results: the ARWGI theorem deployment, the
 HAMCG hot-atom subgraph, the BCI deployed system (selectivity-tiered dispatcher + PACH cluster cache + per-tag bitvecs + pair-posting cache), the DKW
-calibration of $\varepsilon_{\mathrm{corr}}$ for hypothesis (H2), and the
+ of $\varepsilon_{\mathrm{corr}}$ for hypothesis (H2), and the
 $t$-disjunct group-testing sentinel validation for Theorem T-D.
 
 Baseline systems (SIEVE, Parlay-IVF, UNG, iRangeGraph, Filtered-DiskANN, JAG,
@@ -25,7 +25,7 @@ boole-ann-code/
 │   │   ├── bci_exact_only_yfcc10m.py  # BCI deployed system on YFCC10M
 │   │   ├── hamcg_sift1b_clean.py      # SIFT1B scale-out
 │   │   ├── bci_hamcg_laion1m_richer.py# LAION1M conjunctions
-│   │   ├── dkw_calibration_yfcc10m.py # DKW calibration of epsilon_corr (Lemma 3)
+│   │   ├── dkw__yfcc10m.py # DKW  of epsilon_corr (Lemma 3)
 │   │   ├── sanity_check_td_sentinel.py# T-D group-testing sentinel validation
 │   │   ├── pac_t1a_audit.py           # T-1A PAC audit (per-query envelope)
 │   │   └── cert_e_bridge.py           # cert_e -> deployed proxy bridge
@@ -56,7 +56,7 @@ boole-ann-code/
 ├── scripts/                            # one-shot runners
 │   ├── 01_install.sh                   # pip install + build C++ port
 │   ├── 02_download_datasets.sh         # YFCC10M / SIFT100M / SIFT1B / LAION1M URLs
-│   ├── 10_reproduce_dkw_calibration.sh # epsilon_corr calibration (T-1A H2)
+│   ├── 10_reproduce_dkw_.sh # epsilon_corr  (T-1A H2)
 │   ├── 11_reproduce_yfcc10m.sh         # YFCC10M conjunction Pareto (Fig. 3)
 │   ├── 12_reproduce_sift100m.sh        # SIFT100M scale-out (Table 2)
 │   ├── 13_reproduce_sift1b.sh          # SIFT1B scale-out (Table 2)
@@ -95,7 +95,7 @@ export BOOLEANN_ROOT=$PWD
 
 bash scripts/01_install.sh                 # Python deps + build cpp/
 bash scripts/02_download_datasets.sh       # download YFCC10M (others gated)
-bash scripts/10_reproduce_dkw_calibration.sh
+bash scripts/10_reproduce_dkw_.sh
 bash scripts/11_reproduce_yfcc10m.sh       # ~3 hours on EPYC 7642 96-core
 ```
 
@@ -114,7 +114,7 @@ the top of each file.
 |-----------------------------------------------------------|---------------------------------------------|--------|
 | Fig. 3 (BCI vs Parlay-IVF, 15/15 cross-slice cells)        | `scripts/11_reproduce_yfcc10m.sh`           | `results/yfcc10m/cross_slice.json` |
 | Sec. 6.3, T-D sentinel (t in {8,16,24})                    | `scripts/15_reproduce_td_sentinel.sh`       | `results/sift1m/td_sentinel.json` |
-| Sec. 6.4, $\varepsilon_{\mathrm{corr}}=0.075$ at $m=594$    | `scripts/10_reproduce_dkw_calibration.sh`   | `results/dkw_calibration_yfcc10m/summary.json` |
+| Sec. 6.4, $\varepsilon_{\mathrm{corr}}=0.075$ at $m=594$    | `scripts/10_reproduce_dkw_.sh`   | `results/dkw__yfcc10m/summary.json` |
 | Table 2, SIFT100M 0.999@3.6 ms                             | `scripts/12_reproduce_sift100m.sh`          | `results/sift100m/bci.json` |
 | Table 2, SIFT1B 0.995@5.7 ms                               | `scripts/13_reproduce_sift1b.sh`            | `results/sift1b/bci.json` |
 | LAION1M 5.30x (text only, supplemental measurement)         | `scripts/14_reproduce_laion1m.sh`           | `results/laion1m/bci.json` |
@@ -127,7 +127,7 @@ the top of each file.
 All defaults match the paper's canonical configuration; no per-slice retuning.
 
 * **HNSW** (graph index for ARWGI and HAMCG inner search): `M = 32`,
-  `ef_construction = 200`, `ef_search = 200` (calibration) / `400` (HAMCG inner).
+  `ef_construction = 200`, `ef_search = 200` () / `400` (HAMCG inner).
 * **HAMCG vocabulary** (per-atom subgraph): edge budget
   `B = 3.2e8` for YFCC10M (~2747 atoms selected),
   `B = 1.0e8` for LAION1M (top-~400 tags).
@@ -136,7 +136,7 @@ All defaults match the paper's canonical configuration; no per-slice retuning.
 * **BCI dispatcher** (CAPD, Sec. 3.4 / 4.3): canonical slice config
   `beam = 4096`, `cut = 1.35`, `tau = 5e5`, plus per-tag bitvecs + pair-posting
   two-tag cache.
-* **DKW calibration** (Lemma 3): `m = 594` calibration queries,
+* **DKW ** (Lemma 3): `m = 594`  queries,
   `delta_cal = delta_corr = 0.05`, yields
   `epsilon_corr <= 0.075` with probability `>= 0.95`.
 
