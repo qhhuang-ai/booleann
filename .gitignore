@@ -1,22 +1,17 @@
-# Build outputs
-cpp/build/
-__pycache__/
-*.pyc
-*.pyo
+build/
+cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+*.o
+*.a
 *.so
 *.dylib
-
-# Local results / data
-results/
-data/raw/
-data/*.bin
-data/*.spmat
-data/*.u8bin
-data/*.fvecs
-data/*.bvecs
-
-# OS / editor
-.DS_Store
-*.swp
-.vscode/
-.idea/
+*.su
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+data/
+indexes/
+outputs/
+*.log

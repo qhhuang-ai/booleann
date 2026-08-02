@@ -1,0 +1,25 @@
+{
+  "budget_bytes": 7,
+  "units": [
+    {"id": "pair_ab_u24", "cost_bytes": 3},
+    {"id": "range_block_u24", "cost_bytes": 4},
+    {"id": "pair_cd_delta16", "cost_bytes": 5}
+  ],
+  "queries": [
+    {
+      "id": "q0",
+      "weight": 2,
+      "saving_us": {"pair_ab_u24": 5, "range_block_u24": 7}
+    },
+    {
+      "id": "q1",
+      "weight": 1,
+      "saving_us": {"pair_ab_u24": 3, "pair_cd_delta16": 20}
+    },
+    {
+      "id": "q2",
+      "weight": 1,
+      "saving_us": {"range_block_u24": 8, "pair_cd_delta16": 8}
+    }
+  ]
+}

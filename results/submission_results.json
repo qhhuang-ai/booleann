@@ -1,0 +1,75 @@
+{
+  "schema": "booleann-submission-results-v1",
+  "paper": "Boole-ANN: Joint Physical Design for Structured Filtered Vector Search",
+  "experiments": {
+    "yfcc10m_high_recall": {
+      "boole_qps": 17842,
+      "baseline_qps": 14932,
+      "ratio": 1.195,
+      "ci95": [1.191, 1.198],
+      "boole_recall": 0.99978,
+      "baseline_recall": 0.99965
+    },
+    "yfcc10m_exact": {
+      "boole_qps": 28881,
+      "baseline_qps": 13700,
+      "ratio": 2.108,
+      "ci95": [1.878, 2.366],
+      "boole_recall": 1.0,
+      "baseline_recall": 1.0
+    },
+    "sift10m_range": {
+      "ratio": 1.710,
+      "lower95": 1.682,
+      "boole_recall": 0.9965,
+      "baseline_recall": 0.9944
+    },
+    "sift10m_dnf": {
+      "ratio": 1.491,
+      "lower95": 1.440,
+      "boole_recall": 0.9938,
+      "baseline_recall": 0.9945
+    },
+    "laion1m_mixed": {
+      "boole_qps": 1680,
+      "leaf_qps": 1079,
+      "ratio": 1.557,
+      "p95_ratio": 0.467,
+      "p99_ratio": 0.398,
+      "recall": 1.0
+    },
+    "laion1m_dnf_u24": {
+      "ratio": 1.596,
+      "ci95": [1.556, 1.637],
+      "recall": 1.0
+    },
+    "laion1m_dnf_delta16": {
+      "ratio": 1.591,
+      "ci95": [1.563, 1.620],
+      "recall": 1.0
+    },
+    "laion1m_joint_vs_stagewise": {
+      "latency_ratio": 1.362,
+      "block_range": [1.295, 1.484],
+      "recall": 1.0
+    },
+    "sift100m_pair_materialization": {
+      "throughput_ratio": 52.74,
+      "ci95": [50.05, 55.58],
+      "latency_ratio": 27.16,
+      "latency_ci95": [26.16, 28.19]
+    },
+    "sift100k_controls": {
+      "support_localization_ratio": 6.113,
+      "contiguous_layout_ratio": 4.469,
+      "range_prefix_ratio": 1.174
+    },
+    "sift100k_hierarchy": {
+      "hierarchy_qps": 3816,
+      "baseline_qps": 2954,
+      "ratio": 1.292,
+      "recall": 1.0,
+      "calls_per_query": 8.46
+    }
+  }
+}
