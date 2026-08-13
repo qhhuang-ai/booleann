@@ -29,8 +29,26 @@ else()
   message(STATUS "SIEVE_ROOT is unset; Predicate-Cube executors are skipped")
 endif()
 
+if(SIEVE_ROOT AND PARLAYANN_ROOT)
+  add_subdirectory(src/laion_sieve)
+else()
+  message(STATUS "SIEVE_ROOT or PARLAYANN_ROOT is unset; LAION/SIEVE formal runner is skipped")
+endif()
+
 find_package(Python3 COMPONENTS Interpreter)
 if(Python3_Interpreter_FOUND)
+  add_test(
+    NAME laion_fused_leaf_topk_self_test
+    COMMAND ${CMAKE_COMMAND} -E env
+            LAION_FUSED_LEAF_TOPK_LIBRARY=$<TARGET_FILE:fused_leaf_topk>
+            ${Python3_EXECUTABLE}
+            ${CMAKE_SOURCE_DIR}/tests/test_fused_leaf_topk.py)
+  add_test(
+    NAME laion_elias_fano_topk_self_test
+    COMMAND ${CMAKE_COMMAND} -E env
+            LAION_ELIAS_FANO_TOPK_LIBRARY=$<TARGET_FILE:elias_fano_topk>
+            ${Python3_EXECUTABLE}
+            ${CMAKE_SOURCE_DIR}/tests/test_elias_fano_topk.py)
   add_test(
     NAME fragment_advisor_self_test
     COMMAND ${Python3_EXECUTABLE}

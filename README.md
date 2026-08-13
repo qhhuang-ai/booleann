@@ -17,6 +17,7 @@ The repository snapshot corresponds to the submitted paper in
 | `src/ordered` | Fixed-block range, DNF, and hierarchical range executors |
 | `src/predicate_cube` | Contiguous Predicate-Cube executor and component controls |
 | `src/laion` | U24/Delta16 support layouts, fragment composition, and exact leaf merge |
+| `src/laion_sieve` | Paired LAION mixed-workload runner and released-SIEVE adapter |
 | `scripts` | Submission-result consistency checks |
 | `results` | Compact values reported in the submitted paper |
 | `EXTERNAL_DEPENDENCIES.md` | Upstream locations and revisions; no baseline source is vendored |
@@ -43,11 +44,14 @@ The native LAION kernels have no external baseline dependency:
 ```bash
 cmake -S . -B build
 cmake --build build -j --target \
-  fixed_block_compositor packed_fixed_block_compositor leaf_posting_merge
+  fixed_block_compositor packed_fixed_block_compositor leaf_posting_merge \
+  elias_fano_topk
 ```
 
 To build the categorical and ordered engines, provide an unmodified ParlayANN
-checkout. To build Predicate-Cube, also provide an unmodified SIEVE checkout:
+checkout. YFCC graph shards are built by that independent upstream checkout;
+this repository does not redistribute or reimplement its graph builder. To
+build Predicate-Cube, also provide an unmodified SIEVE checkout:
 
 ```bash
 cmake -S . -B build \
@@ -56,6 +60,11 @@ cmake -S . -B build \
 cmake --build build -j
 ctest --test-dir build --output-on-failure
 ```
+
+This configuration also builds `laion_sieve_paired_formal`, the paired
+eight-lane runner used for the paper's LAION/SIEVE mixed-workload result.
+Its controller and independent analyzer are in
+`scripts/laion_sieve_formal/`.
 
 The repository does not redistribute datasets, indexes, or baseline source.
 See [`REPRODUCING.md`](REPRODUCING.md) for input formats and experiment mapping.
@@ -67,8 +76,8 @@ datasets remain subject to their respective upstream licenses.
 
 ## Baseline policy
 
-Baseline implementations are obtained from their authors' repositories and
-executed at the revisions listed in
+Baseline implementations and upstream graph builders are obtained from their
+authors' repositories and executed at the revisions listed in
 [`EXTERNAL_DEPENDENCIES.md`](EXTERNAL_DEPENDENCIES.md). They are not copied,
 submoduled, patched, or redistributed by this repository. Boole-ANN adapters
 translate common vectors, predicates, thread counts, and returned IDs while

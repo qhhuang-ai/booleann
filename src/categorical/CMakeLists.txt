@@ -21,5 +21,4 @@ endfunction()
 
 add_boole_categorical_target(boole_yfcc categorical_bench.cpp)
 add_boole_categorical_target(boole_sift100m sift100m_bench.cpp)
-add_boole_categorical_target(build_yfcc_shards build_categorical_shards.cpp)
 add_boole_categorical_target(build_sift100m_shards build_sift100m_shards.cpp)

@@ -113,10 +113,7 @@ using CommonPackVector =
 using CommonPackVector = std::vector<uint8_t>;
 #endif
 
-// SIMD-accelerated L2 squared distance for uint8 vectors (AVX2).
-// Replaces the scalar fallback in euclidian_point.h for the brute hot path
-// where this is the dominant work. For dim=192 (YFCC10M) this is 6× AVX2
-// iterations + final tail; expected speedup vs scalar: 4-8×.
+// AVX2 squared L2 distance for uint8 vectors.
 static inline float l2_sq_uint8_avx2(const uint8_t* __restrict__ a,
                                      const uint8_t* __restrict__ b,
                                      unsigned d) {
@@ -8361,7 +8358,7 @@ int main(int argc, char** argv) {
                t_exact_pack1 - t_exact_pack0).count());
   }
 
-  // PACH-in-brute (NOVEL) — partition each packed_cold tag's posting into
+  // Partition each packed posting into
   // chunks of CHUNK_SIZE points. Per chunk, store a bitvec over secondary
   // predicate IDs: bit B set iff ≥1 point in chunk has tag B. At query time
   // for conjunction A∧B (brute path on primary A), skip whole chunks where
@@ -8560,7 +8557,7 @@ int main(int argc, char** argv) {
          std::chrono::duration<double>(t_bv1-t_bv0).count(),
          bitvecs.size() * bv_words * 8 / 1e6);
 
-  // PACH (Predicate-Aware Cluster Hierarchy) — NOVEL BCI contribution.
+  // Predicate-aware cluster summaries.
   // For each primary tag T and each cluster c of T, pre-compute a bitvec
   // over secondary tag IDs: bit B set iff cluster c contains ≥1 point with tag B.
   // At query time for A ∧ B with primary=A: scan only clusters c of A whose
@@ -8670,11 +8667,8 @@ int main(int argc, char** argv) {
       int32_t small_t = orientation.first;
       int32_t large_t = orientation.second;
       int64_t small_size = std::min(f1, f2);
-      // KEY FIX (per per-route diag: HAMCG_conj recall 0.79 — catastrophic):
-      // If smaller tag's posting is small enough to brute, do exact intersection
-      // scan instead of imprecise HAMCG_conj (sub_via_single + post-filter).
-      // Threshold 200K = brute cost ~40ms per query but recall ~1.0.
-      // Trade QPS for recall to surpass ParlayIVF.
+      // Use exact intersection scanning for bounded supports; larger supports
+      // retain graph traversal with post-filtering.
       if (small_size <= brute_conj_thresh) {
         q_route[i] = 2; q_primary[i] = small_t; q_secondary[i] = large_t;  // brute exact
       } else if (shards.count(small_t)) {
@@ -9951,8 +9945,7 @@ int main(int argc, char** argv) {
       }
     }
     // Iter (per BCI ceiling at 0.93 finding): boost limit to allow beam search
-    // to actually explore the graph. ParlayIVF uses limit = 100K-3M. We were
-    // starving at 8*beam. Try 100x beam as a balance between budget and reach.
+    // Bound graph exploration independently from the output width.
     long bounded_limit = std::min<long>((long)sh.graph.size(), (long)std::max<long>(100L * beam, 100000L));
     const int64_t tag_support =
         bmt.row_offsets[T + 1] - bmt.row_offsets[T];

@@ -1,7 +1,7 @@
 // bci_bench: Boole-ANN Cell Index (BCI) full-system benchmark on SIFT100M.
 // Float32 / dim=128. 100M base, 200 conjunction queries (8 pairs × 25 each).
 // Designed for the 2-tag conjunction breadth experiment (sole-survivor at 100M
-// scale — UNG / iRange / DSG OOM, MS-DiskANN segfault).
+// scale with exact support materialization and global-ID result validation.
 // Brute-only path: no HAMCG shards needed; per-tag brute over posting list
 // with AVX2 + PACH; recall = 1.0 by construction.
 // For each query in [qid_lo, qid_hi):
@@ -480,7 +480,7 @@ int main(int argc, char** argv) {
          frozen_atom_bitvecs ? "frozen_all12" : "query_discovery",
          all_query_tags.size());
 
-  // PACH (Predicate-Aware Cluster Hierarchy) — NOVEL BCI contribution.
+  // Predicate-aware cluster summaries.
   // For each primary tag T and each cluster c of T, pre-compute a bitvec
   // over secondary tag IDs: bit B set iff cluster c contains ≥1 point with tag B.
   // At query time for A ∧ B with primary=A: scan only clusters c of A whose
@@ -594,11 +594,8 @@ int main(int argc, char** argv) {
           goto conj_routed;
         }
       }
-      // KEY FIX (per per-route diag: HAMCG_conj recall 0.79 — catastrophic):
-      // If smaller tag's posting is small enough to brute, do exact intersection
-      // scan instead of imprecise HAMCG_conj (sub_via_single + post-filter).
-      // Threshold 200K = brute cost ~40ms per query but recall ~1.0.
-      // Trade QPS for recall to surpass ParlayIVF.
+      // Use exact intersection scanning for bounded supports; larger supports
+      // retain graph traversal with post-filtering.
       if (small_size <= brute_conj_thresh) {
         q_route[i] = 2; q_primary[i] = small_t; q_secondary[i] = large_t;  // brute exact
       } else if (shards.count(small_t)) {
@@ -687,8 +684,7 @@ int main(int argc, char** argv) {
     auto& sh = *shards[T];
     ThinSubPR sub_pr(base, sh.subset);  // constructed ONCE per shard
     // Iter (per BCI ceiling at 0.93 finding): boost limit to allow beam search
-    // to actually explore the graph. ParlayIVF uses limit = 100K-3M. We were
-    // starving at 8*beam. Try 100x beam as a balance between budget and reach.
+    // Bound graph exploration independently from the output width.
     long bounded_limit = std::min<long>((long)sh.graph.size(), (long)std::max<long>(100L * beam, 100000L));
     double cut_val = std::getenv("BCI_HAMCG_CUT") ? std::atof(std::getenv("BCI_HAMCG_CUT")) : 1.35;
     // BCI_SINGLE_POOL expands HAMCG_single candidate pool returned by beam_search
@@ -1228,11 +1224,6 @@ int main(int argc, char** argv) {
   }
 
   printf("\n[SIFT100M sole-survivor context]\n");
-  printf("  At 100M scale, the following graph baselines FAIL on 2-tag conjunction:\n");
-  printf("    UNG          : segfault during build (CL-T-UNG-SIFT100M-FAIL)\n");
-  printf("    iRangeGraph  : OOM during build (irange_sift100m_oom)\n");
-  printf("    DSG          : OOM at query time (dsg_sift100m_oom)\n");
-  printf("    MS-DiskANN   : compute_groundtruth int32 overflow (diskann_sift100m_fail)\n");
   printf("  BCI status     : SURVIVE at recall=%.8f, %.1f QPS, p99=%.3f ms\n",
          recall, qps, pct(0.99));
 

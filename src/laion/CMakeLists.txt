@@ -22,3 +22,17 @@ add_library(leaf_posting_merge SHARED native/leaf_posting_merge.cpp)
 target_compile_options(leaf_posting_merge PRIVATE -O3 -march=native -mavx2 -mfma)
 set_target_properties(leaf_posting_merge PROPERTIES
   OUTPUT_NAME leaf_posting_merge)
+
+add_library(fused_leaf_topk SHARED native/fused_leaf_topk.cpp)
+target_compile_options(fused_leaf_topk PRIVATE
+  -O3 -march=native -mavx2 -mfma
+  -fno-fast-math -fno-associative-math -ffp-contract=off)
+set_target_properties(fused_leaf_topk PROPERTIES
+  OUTPUT_NAME fused_leaf_topk)
+
+add_library(elias_fano_topk SHARED native/elias_fano_topk.cpp)
+target_compile_options(elias_fano_topk PRIVATE
+  -O3 -march=native -mavx2
+  -fno-fast-math -fno-associative-math -ffp-contract=off)
+set_target_properties(elias_fano_topk PROPERTIES
+  OUTPUT_NAME elias_fano_topk)

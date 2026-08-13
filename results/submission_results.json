@@ -38,26 +38,104 @@
       "p99_ratio": 0.398,
       "recall": 1.0
     },
-    "laion1m_dnf_u24": {
-      "ratio": 1.596,
-      "ci95": [1.556, 1.637],
-      "recall": 1.0
+    "laion1m_vs_sieve_mixed": {
+      "boole_qps_rounded": 3103,
+      "sieve_qps_rounded": 819,
+      "ratio": 3.787265662,
+      "block_ratio_range": [3.675708011, 3.836792803],
+      "fresh_process_pairs": 8,
+      "two_sided_exact_p": 0.0078125,
+      "system_executions": 12800,
+      "recall": 1.0,
+      "id_and_distance_bits_exact": true,
+      "resource_gate": true
     },
-    "laion1m_dnf_delta16": {
-      "ratio": 1.591,
-      "ci95": [1.563, 1.620],
-      "recall": 1.0
+    "laion1m_vocabulary_drift_control": {
+      "boole_qps": 1557.912,
+      "leaf_qps": 1322.161,
+      "ratio": 1.178307624,
+      "p95_ratio": 0.621212433,
+      "p99_ratio": 0.485235025,
+      "fresh_process_pairs": 8,
+      "system_executions": 51200,
+      "predecessor_disjoint_non_equality_requests_per_arm_block": 2400,
+      "selected_equality_requests_per_treatment_block": 582,
+      "recall": 1.0,
+      "id_and_distance_bits_exact": true
     },
-    "laion1m_joint_vs_stagewise": {
-      "latency_ratio": 1.362,
-      "block_range": [1.295, 1.484],
-      "recall": 1.0
+    "laion1m_prefix384": {
+      "qps_ratio": 2.400,
+      "minimum_route_ratio": 1.632,
+      "range_qps_ratio": 2.682,
+      "range_dnf2_qps_ratio": 2.363,
+      "routes": 33,
+      "fresh_processes": 2,
+      "recall": 1.0,
+      "id_and_distance_bits_exact": true
     },
-    "sift100m_pair_materialization": {
-      "throughput_ratio": 52.74,
-      "ci95": [50.05, 55.58],
-      "latency_ratio": 27.16,
-      "latency_ci95": [26.16, 28.19]
+    "laion1m_prefix384_hybrid": {
+      "qps_ratio": 2.279,
+      "p95_ratio": 0.658,
+      "p99_ratio": 0.744,
+      "lanes": 8,
+      "fresh_processes": 2,
+      "recall": 1.0,
+      "id_and_distance_bits_exact": true
+    },
+    "laion1m_complete_support_owner": {
+      "predicates": 1957,
+      "blocks": 6,
+      "distinct_query_roles": 11742,
+      "timed_records": 46968,
+      "control_over_owner_qps_ratio": 3.695554,
+      "block_ratio_range": [3.570937, 3.823658],
+      "one_sided_exact_p": 0.015625,
+      "owner_over_control_p95_ratio": 0.331351,
+      "owner_over_control_p99_ratio": 0.373304,
+      "owner_strict_recall": 1.0,
+      "control_strict_recall": 0.999523,
+      "owner_tie_aware_recall": 1.0,
+      "control_tie_aware_recall": 1.0,
+      "owner_optional_bytes": 6671700,
+      "control_optional_bytes": 6445215,
+      "optional_byte_cap": 7227208,
+      "owner_build_seconds": 5.027476,
+      "owner_build_peak_bytes": 3235057664,
+      "unexposed_fallback_formulas": 64,
+      "unexposed_fallback_roles": 384,
+      "fallback_strict_recall": 0.999479,
+      "fallback_tie_aware_recall": 1.0
+    },
+    "sift100m_pivf_frontier": {
+      "queries": 3248,
+      "predicate_classes": 58,
+      "fresh_processes_per_cell": 5,
+      "boole_low": {"qps": 4949.248, "recall": 0.998768},
+      "boole_mid": {"qps": 1847.134, "recall": 0.999784},
+      "boole_high": {"qps": 851.833, "recall": 0.999969},
+      "pivf_low": {"qps": 330.282, "recall": 0.977894},
+      "pivf_mid": {"qps": 182.782, "recall": 0.994735},
+      "pivf_high": {"qps": 121.578, "recall": 0.998337},
+      "low_over_low_ratio": 14.984915,
+      "low_over_low_lower95_family9": 13.822552,
+      "minimum_cross_tier_lower95_family9": 2.206958,
+      "boole_persistent_gb": 3.691,
+      "pivf_persistent_gb": 14.396,
+      "boole_max_peak_rss_gib": 53.24,
+      "pivf_max_peak_rss_gib": 68.80,
+      "bitwise_validated_distances": 5846400,
+      "all_validity_gates": true
+    },
+    "sift100m_exact_mechanism": {
+      "pair_over_atom_ratio": 1.574396,
+      "packed_over_pair_ratio": 2.058608,
+      "combined_ratio": 3.241063,
+      "combined_lower95": 3.152432,
+      "atom_over_pair_candidate_visit_ratio": 11.315684,
+      "fresh_processes": 15,
+      "passes": 90,
+      "exact_rank_rows": 2923200,
+      "all_validity_gates": true
     },
     "sift100k_controls": {
       "support_localization_ratio": 6.113,
